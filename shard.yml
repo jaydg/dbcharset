@@ -4,8 +4,8 @@ version: 0.1.0
 authors:
   - Joachim de Groot <jdegroot@web.de>
 
- description: |
-   Convert all tables and columns of a MySQL DB to a given charset and collation
+description: |
+  Convert all tables and columns of a MySQL DB to a given charset and collation
 
 dependencies:
   mysql:
