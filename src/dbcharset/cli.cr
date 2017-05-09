@@ -1,7 +1,34 @@
+require "ini"
 require "option_parser"
 
 class DBCharset
+  MYSQL_CONFIG_FILES = %w(/etc/my.cnf /etc/mysql/my.cnf ~/.my.cnf)
+
+  def get_mysql_config
+    username = ""
+    password = ""
+
+    MYSQL_CONFIG_FILES.each do |filename|
+      filename = File.expand_path(filename)
+      next unless File.file?(filename)
+
+      configfile = File.read(filename)
+      values = INI.parse(configfile)
+      puts values
+      if values.has_key?("client")
+        values["client"].each do |k, v|
+          username = v if k == "user" && username.empty?
+          password = v if k == "password" && password.empty?
+        end
+      end
+    end
+
+    return username, password
+  end
+
   def cli
+    @user, @password = get_mysql_config
+
     parser = OptionParser.parse(@options) do |parser|
       parser.banner = "Usage dbconvert [arguments] DATABASE"
 
