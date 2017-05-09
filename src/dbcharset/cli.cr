@@ -4,9 +4,15 @@ require "option_parser"
 class DBCharset
   MYSQL_CONFIG_FILES = %w(/etc/my.cnf /etc/mysql/my.cnf ~/.my.cnf)
 
-  def get_mysql_config
+  def get_mysql_config(path="")
     username = ""
     password = ""
+
+    if path.empty?
+      files = MYSQL_CONFIG_FILES
+    else
+      files = [path]
+    end
 
     MYSQL_CONFIG_FILES.each do |filename|
       filename = File.expand_path(filename)
@@ -72,6 +78,15 @@ class DBCharset
         "MySQL password"
       ) do |opt_pass|
         @password = opt_pass
+      end
+
+      parser.on(
+        "--defaults-file FILE",
+        "alternate MySQL client configuration file"
+      ) do |opt_defaults_file|
+        u, p = get_mysql_config(opt_defaults_file)
+        @user = u unless u.empty?
+        @password = p unless p.empty?
       end
 
       parser.on("--help", "Show this help") do
