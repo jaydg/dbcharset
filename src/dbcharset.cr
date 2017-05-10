@@ -102,7 +102,7 @@ class DBCharset
 
       puts "Converting all tables and columns in database #{@database}:\n
         character set: #{@charset}
-        collation:     #{@collation}.\n\n"
+        collation:     #{@collation}\n\n"
 
       convert(db, get_tables(db))
     rescue ex
