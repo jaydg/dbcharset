@@ -18,21 +18,11 @@ class DBCharset
     bar = ProgressBar.new
     bar.width = 60
     bar.total = tables.size
+
     db.exec "SET foreign_key_checks = 0"
     tables.each do |table|
       bar.inc
-      q = "ALTER TABLE `#{table}`
-           CONVERT TO CHARACTER SET `#{@charset}`
-           COLLATE `#{@collation}`"
-
-      db.exec q, table
-
-      get_columns(db, table).each do |column, type|
-        q = "ALTER TABLE `#{table}`
-            CHANGE `#{column}` `#{column}` #{type}
-            CHARACTER SET #{@charset} COLLATE #{@collation}"
-      end
-
+      convert_table(db, table)
     end
     db.exec "SET foreign_key_checks = 1"
   end

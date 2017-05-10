@@ -45,6 +45,19 @@ class DBCharset
     db.query_one q, @database, as: String
   end
 
+  private def convert_table(db, table)
+    q = "ALTER TABLE `#{table}`
+         CONVERT TO CHARACTER SET `#{@charset}`
+         COLLATE `#{@collation}`"
+    db.exec q
+
+    get_columns(db, table).each do |column, type|
+      q = "ALTER TABLE `#{table}`
+          CHANGE `#{column}` `#{column}` #{type}
+          CHARACTER SET #{@charset} COLLATE #{@collation}"
+    end
+  end
+
   def connect
     uri = "mysql://"
     uri += "#{@user}#{':' unless @user.empty? || @password.empty?}#{@password}"
