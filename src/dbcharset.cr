@@ -39,7 +39,7 @@ class DBCharset
 
       convert(db, get_tables(db))
     rescue ex
-      puts "#{ex}"
+      puts ex
       exit 1
     ensure
       db.close unless db.nil?
