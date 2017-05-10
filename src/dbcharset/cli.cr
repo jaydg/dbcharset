@@ -35,7 +35,7 @@ class DBCharset
     @user, @password = get_mysql_config
 
     parser = OptionParser.parse(@options) do |parser|
-      parser.banner = "Usage dbconvert [arguments] DATABASE"
+      parser.banner = "Usage dbcharset [arguments] DATABASE\n"
 
       parser.on(
         "-c CHARSET", "--charset CHARSET",
@@ -86,6 +86,11 @@ class DBCharset
         u, p = get_mysql_config(opt_defaults_file)
         @user = u unless u.empty?
         @password = p unless p.empty?
+      end
+
+      parser.on("--version", "Show version information") do
+        puts "dbcharset version #{VERSION}"
+        exit 0
       end
 
       parser.on("--help", "Show this help") do
