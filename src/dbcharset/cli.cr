@@ -20,7 +20,6 @@ class DBCharset
 
       configfile = File.read(filename)
       values = INI.parse(configfile)
-      puts values
       if values.has_key?("client")
         values["client"].each do |k, v|
           username = v if k == "user" && username.empty?
