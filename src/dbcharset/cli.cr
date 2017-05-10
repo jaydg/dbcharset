@@ -14,7 +14,7 @@ class DBCharset
       files = [path]
     end
 
-    MYSQL_CONFIG_FILES.each do |filename|
+    files.each do |filename|
       filename = File.expand_path(filename)
       next unless File.file?(filename)
 
