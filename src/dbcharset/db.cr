@@ -45,6 +45,15 @@ class DBCharset
     db.query_one q, @database, as: String
   end
 
+  private def set_database_defaults(db)
+    q = "ALTER DATABASE `#{@database}`
+         CHARACTER SET `#{@charset}`
+         COLLATE `#{@collation}`"
+
+    # ALTER DATABASE is not supported in prepared statements
+    db.unprepared(q).exec
+  end
+
   private def convert_table(db, table)
     q = "ALTER TABLE `#{table}`
          CONVERT TO CHARACTER SET `#{@charset}`

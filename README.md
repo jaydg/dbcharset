@@ -1,2 +1,4 @@
 # dbcharset
-Convert all tables and columns of a MySQL DB to a give charset and collation
+
+Change the default charset and collation of a MySQL database and convert all
+tables and columns to a given charset and collation.

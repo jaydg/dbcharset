@@ -37,6 +37,11 @@ class DBCharset
         character set: #{@charset}
         collation:     #{@collation}\n\n"
 
+      # Modify database default charset and collation if required
+      if get_default_charset(db) != @charset || get_default_collation(db) != @collation
+        set_database_defaults(db)
+      end
+
       convert(db, get_tables(db))
     rescue ex
       puts ex
