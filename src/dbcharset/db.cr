@@ -31,6 +31,20 @@ class DBCharset
     return columns
   end
 
+  private def get_default_charset(db)
+    q = "SELECT default_character_set_name
+         FROM information_schema.SCHEMATA
+         WHERE SCHEMA_NAME = (?)"
+    db.query_one q, @database, as: String
+  end
+
+  private def get_default_collation(db)
+    q = "SELECT DEFAULT_COLLATION_NAME
+         FROM information_schema.SCHEMATA
+         WHERE SCHEMA_NAME = (?)"
+    db.query_one q, @database, as: String
+  end
+
   def connect
     uri = "mysql://"
     uri += "#{@user}#{':' unless @user.empty? || @password.empty?}#{@password}"
@@ -38,19 +52,13 @@ class DBCharset
     db = DB.open uri
 
     if @charset.empty?
-      # Get the default charset configured for the database
-      q = "SELECT default_character_set_name
-           FROM information_schema.SCHEMATA
-           WHERE SCHEMA_NAME = (?)"
-      @charset = db.query_one q, @database, as: String
+    # Get the default charset configured for the database
+      @charset = get_default_charset(db)
     end
 
     if @collation.empty?
       # Get the default collation configured for the database
-      q = "SELECT DEFAULT_COLLATION_NAME
-           FROM information_schema.SCHEMATA
-           WHERE SCHEMA_NAME = (?)"
-      @collation = db.query_one q, @database, as: String
+      @collation = get_default_collation(db)
     end
 
     return db
